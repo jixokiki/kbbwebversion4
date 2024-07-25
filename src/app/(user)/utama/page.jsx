@@ -29,7 +29,7 @@ export default function Home() {
       <Navbar />
       <div className="relative">
         <Image
-          src={"/assets/kbbLogo.jpeg"}
+          src={"/assets/gudangkbb.jpeg"}
           width={3000 / 3}
           height={2000 / 3}
           className="relative w-full h-screen object-cover"

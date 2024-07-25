@@ -229,7 +229,7 @@ const User = () => {
         >
           Add User
         </button>
-        <button
+        {/* <button
           className="btn bg-green-600 hover:bg-green-500 text-white"
           onClick={() => {
             handleSelectUser(user);
@@ -237,14 +237,14 @@ const User = () => {
           }}
         >
           Edit
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           className="btn bg-red-600 hover:bg-red-500 text-white"
           onClick={() => handleDeleteUser(user.id)}
         >
           Delete
-        </button>
+        </button> */}
 
         <dialog id="addUserModal" className="modal">
           <div className="modal-box">

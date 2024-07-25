@@ -235,7 +235,7 @@ const UserProfile = () => {
           stock: formData.stock,
           deliveryDate: formData.deliveryDate,
           totalHarga: totalHarga, // Menambahkan total harga
-          status: "barang ready", // Menambahkan status barang
+          status: "diproses", // Menambahkan status barang
           timestamp: new Date(),
         });
 

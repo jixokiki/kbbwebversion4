@@ -155,12 +155,12 @@ const SignIn = () => {
           >
             {isLoading ? "Masuk..." : "Masuk"}
           </button>
-          <p className="mt-10">
+          {/* <p className="mt-10">
             Tidak Mempunyai Akun?{" "}
             <Link href={"/sign-up"} className="text-indigo-500 hover:underline">
               Daftar Di Sini
             </Link>
-          </p>
+          </p> */}
           {/* <p className="mt-10">
             please reset your password!!{" "}
             <Link href={"/reset"} className="text-indigo-500 hover:underline">

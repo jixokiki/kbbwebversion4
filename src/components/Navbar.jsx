@@ -91,14 +91,14 @@ const Navbar = () => {
           )} */}
           {!user ? (
             <>
-              <li className="md:mr-3">
+              {/* <li className="md:mr-3">
                 <Link
                   href={"/sign-up"}
                   className="px-4 py-3 transition-all duration-500 bg-gray-200 hover:bg-zinc-900 rounded hover:text-white"
                 >
                   Daftar
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href={"/sign-in"}
@@ -157,14 +157,14 @@ const Navbar = () => {
         )} */}
         {!user ? (
           <>
-            <li className="w-full bg-gray-100 py-3 rounded">
+            {/* <li className="w-full bg-gray-100 py-3 rounded">
               <Link
                 href={"/sign-up"}
                 className="transition-all duration-500  rounded hover:text-white"
               >
                 Daftar
               </Link>
-            </li>
+            </li> */}
             <li className="w-full bg-teal-100 py-3 rounded">
               <Link
                 href={"/sign-in"}

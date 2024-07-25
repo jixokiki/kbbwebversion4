@@ -193,7 +193,7 @@
 // export default NavbarUser;
 
 
-
+//CODE FIX TGL 25 JULI 2024
 "use client";
 import useAuth from "@/app/hooks/useAuth";
 import Link from "next/link";
@@ -243,7 +243,7 @@ const NavbarUser = () => {
               Produk
             </Link>
           </li>
-          {user && (
+          {/* {user && (
             <li className="md:mr-3">
               <Link
                 href={"/desain"}
@@ -252,7 +252,7 @@ const NavbarUser = () => {
                 Pesan
               </Link>
             </li>
-          )}
+          )} */}
           {user && (
             <li className="md:mr-3">
               <Link
@@ -265,14 +265,14 @@ const NavbarUser = () => {
           )}
           {!user ? (
             <>
-              <li className="md:mr-3">
+              {/* <li className="md:mr-3">
                 <Link
                   href={"/sign-up"}
                   className="px-4 py-3 transition-all duration-500 bg-gray-200 hover:bg-zinc-900 rounded hover:text-white"
                 >
                   Daftar
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href={"/sign-in"}

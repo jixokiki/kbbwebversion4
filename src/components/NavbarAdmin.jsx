@@ -68,14 +68,14 @@ const NavbarAdmin = () => {
               Kerjasama
             </Link>
           </li>
-          {/* <li className="md:mr-3">
+          <li className="md:mr-3">
             <Link
               href={"/admin/users"}
               className="px-4 py-3  transition-all duration-300 hover:bg-teal-500 hover:text-white rounded"
             >
               Users
             </Link>
-          </li> */}
+          </li>
           <li>
             <Link
               href={"/sign-in"}

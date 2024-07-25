@@ -634,11 +634,213 @@
 
 // export default UserProfile;
 
+//CODE YANG SUDAH FIX SEBELUMNYA
+// "use client";
+// import { useEffect, useState } from "react";
+// import { auth, db } from "@/firebase/firebase";
+// import { doc, getDoc, addDoc, collection, query, where, getDocs } from "firebase/firestore";
+// import { useRouter } from "next/navigation"; 
+// import NavbarAdmin from "@/components/NavbarAdmin";
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import CardItem7 from "@/components/CardItem7";
+
+// const UserProfile = () => {
+//   const router = useRouter();
+//   const [user, loading] = useAuthState(auth);
+//   const [formData, setFormData] = useState({
+//     fullName: "",
+//     contact: "",
+//     address: "",
+//     packaging: "",
+//     namaProduct: "",
+//     stock: "",
+//     deliveryDate: "",
+//   });
+//   const [errors, setErrors] = useState({});
+//   const [toastMessage, setToastMessage] = useState(null);
+//   const [orders, setOrders] = useState([]); // Add this line to initialize orders state
+
+//   useEffect(() => {
+//     const fetchUserData = async () => {
+//       if (user) {
+//         const docRef = doc(db, "users", user.uid);
+//         const docSnap = await getDoc(docRef);
+//         if (docSnap.exists()) {
+//           const data = docSnap.data();
+//           setFormData((prevFormData) => ({
+//             ...prevFormData,
+//             fullName: data.name || "",
+//             contact: data.contact || "",
+//             address: data.address || "",
+//           }));
+//         }
+//       }
+//     };
+//     fetchUserData();
+//   }, [user]);
+
+//   useEffect(() => {
+//     const fetchOrders = async () => {
+//       if (user) {
+//         const q = query(collection(db, "userRelasi"), where("userId", "==", user.uid));
+//         const querySnapshot = await getDocs(q);
+//         const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+//         setOrders(ordersData);
+//       }
+//     };
+//     fetchOrders();
+//   }, [user]);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prevFormData) => ({
+//       ...prevFormData,
+//       [name]: value,
+//     }));
+//   };
+
+//   const calculatePrice = () => {
+//     const { packaging, namaProduct, stock } = formData;
+//     let unitPrice = 0;
+
+//     if (namaProduct === "Karila Pandan Wangi Premium") {
+//       switch (packaging) {
+//         case "3 Kg":
+//           unitPrice = 49500;
+//           break;
+//         case "5 Kg":
+//           unitPrice = 82500;
+//           break;
+//         case "10 Kg":
+//           unitPrice = 165000;
+//           break;
+//         case "20 Kg":
+//           unitPrice = 330000;
+//           break;
+//         case "25 Kg":
+//           unitPrice = 412500;
+//           break;
+//         default:
+//           unitPrice = 0;
+//           break;
+//       }
+//     }
+
+//     if (namaProduct === "Karila Ramos") {
+//       switch (packaging) {
+//         case "3 Kg":
+//           unitPrice = 43500;
+//           break;
+//         case "5 Kg":
+//           unitPrice = 72500;
+//           break;
+//         case "10 Kg":
+//           unitPrice = 145000;
+//           break;
+//         case "20 Kg":
+//           unitPrice = 290000;
+//           break;
+//         case "25 Kg":
+//           unitPrice = 362500;
+//           break;
+//         default:
+//           unitPrice = 0;
+//           break;
+//       }
+//     }
+//     return unitPrice * (parseInt(stock) || 0);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     let newErrors = {};
+
+//     if (!formData.fullName) newErrors.fullName = "Full name is required";
+//     if (!formData.contact) newErrors.contact = "Contact is required";
+//     if (!formData.address) newErrors.address = "Address is required";
+//     if (!formData.packaging) newErrors.packaging = "Packaging is required";
+//     if (!formData.namaProduct) newErrors.namaProduct = "Product is required";
+//     if (!formData.stock) newErrors.stock = "Stock is required";
+//     if (!formData.deliveryDate) newErrors.deliveryDate = "Delivery date is required";
+
+//     setErrors(newErrors);
+
+//     if (Object.keys(newErrors).length === 0 && user) {
+//       const totalHarga = calculatePrice();
+
+//       try {
+//         await addDoc(collection(db, "userRelasi"), {
+//           userId: user.uid,
+//           fullName: formData.fullName,
+//           contact: formData.contact,
+//           address: formData.address,
+//           packaging: formData.packaging,
+//           namaProduct: formData.namaProduct,
+//           stock: formData.stock,
+//           deliveryDate: formData.deliveryDate,
+//           totalHarga: totalHarga,
+//           status: "barang ready",
+//           timestamp: new Date(),
+//         });
+
+//         setToastMessage("Order requested successfully");
+
+//         setFormData({
+//           fullName: "",
+//           contact: "",
+//           address: "",
+//           packaging: "",
+//           namaProduct: "",
+//           stock: "",
+//           deliveryDate: "",
+//         });
+//       } catch (error) {
+//         console.error("Error adding document: ", error);
+//       }
+//     }
+//   };
+
+//   const filterOrdersByProductName = (productName) => {
+//     return orders.filter(order => order.namaProduct === productName);
+//   };
+
+//   return (
+//     <div className="mt-10">
+//       <NavbarAdmin />
+//       <div className="mt-53 px-10 my-16">
+//         <h2 className="text-2xl font-semibold mb-4 text-center">Order List</h2>
+//         {["Karila Pandan Wangi Premium", "Karila Ramos"].map((productName) => (
+//           <div key={productName}>
+//             <h3 className="text-xl font-semibold mb-2">{productName}</h3>
+//             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10" >
+//               {filterOrdersByProductName(productName).map((order) => (
+//                 <CardItem7
+//                   key={order.id}
+//                   id={order.id}
+//                   itemName={order.namaProduct}
+//                   ptName={order.fullName}
+//                   packaging={order.packaging}
+//                   // price={order.totalHarga}
+//                   status={order.status}
+//                   deliveryDate={order.deliveryDate}
+//                   stock={order.stock}
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default UserProfile;
+
 
 "use client";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/firebase/firebase";
-import { doc, getDoc, addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, query, where, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation"; 
 import NavbarAdmin from "@/components/NavbarAdmin";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -658,7 +860,9 @@ const UserProfile = () => {
   });
   const [errors, setErrors] = useState({});
   const [toastMessage, setToastMessage] = useState(null);
-  const [orders, setOrders] = useState([]); // Add this line to initialize orders state
+  const [orders, setOrders] = useState([]); 
+  const [editOrderId, setEditOrderId] = useState(null); // Add state to manage edit mode
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -769,21 +973,40 @@ const UserProfile = () => {
       const totalHarga = calculatePrice();
 
       try {
-        await addDoc(collection(db, "userRelasi"), {
-          userId: user.uid,
-          fullName: formData.fullName,
-          contact: formData.contact,
-          address: formData.address,
-          packaging: formData.packaging,
-          namaProduct: formData.namaProduct,
-          stock: formData.stock,
-          deliveryDate: formData.deliveryDate,
-          totalHarga: totalHarga,
-          status: "barang ready",
-          timestamp: new Date(),
-        });
-
-        setToastMessage("Order requested successfully");
+        if (editOrderId) {
+          // Update existing order
+          const docRef = doc(db, "userRelasi", editOrderId);
+          await updateDoc(docRef, {
+            userId: user.uid,
+            fullName: formData.fullName,
+            contact: formData.contact,
+            address: formData.address,
+            packaging: formData.packaging,
+            namaProduct: formData.namaProduct,
+            stock: formData.stock,
+            deliveryDate: formData.deliveryDate,
+            totalHarga: totalHarga,
+            status: "diproses",
+            timestamp: new Date(),
+          });
+          setToastMessage("Order updated successfully");
+        } else {
+          // Add new order
+          await addDoc(collection(db, "userRelasi"), {
+            userId: user.uid,
+            fullName: formData.fullName,
+            contact: formData.contact,
+            address: formData.address,
+            packaging: formData.packaging,
+            namaProduct: formData.namaProduct,
+            stock: formData.stock,
+            deliveryDate: formData.deliveryDate,
+            totalHarga: totalHarga,
+            status: "barang ready",
+            timestamp: new Date(),
+          });
+          setToastMessage("Order requested successfully");
+        }
 
         setFormData({
           fullName: "",
@@ -794,14 +1017,51 @@ const UserProfile = () => {
           stock: "",
           deliveryDate: "",
         });
+        setEditOrderId(null);
+        setIsEditModalOpen(false);
       } catch (error) {
-        console.error("Error adding document: ", error);
+        console.error("Error adding or updating document: ", error);
       }
+    }
+  };
+
+  const handleEdit = (order) => {
+    setFormData({
+      fullName: order.fullName,
+      contact: order.contact,
+      address: order.address,
+      packaging: order.packaging,
+      namaProduct: order.namaProduct,
+      stock: order.stock,
+      deliveryDate: order.deliveryDate,
+    });
+    setEditOrderId(order.id);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = async (orderId) => {
+    try {
+      await deleteDoc(doc(db, "userRelasi", orderId));
+      setOrders(orders.filter(order => order.id !== orderId));
+      setToastMessage("Order deleted successfully");
+    } catch (error) {
+      console.error("Error deleting document: ", error);
     }
   };
 
   const filterOrdersByProductName = (productName) => {
     return orders.filter(order => order.namaProduct === productName);
+  };
+
+  const groupOrdersByFullName = (orders) => {
+    const groupedOrders = {};
+    orders.forEach((order) => {
+      if (!groupedOrders[order.fullName]) {
+        groupedOrders[order.fullName] = [];
+      }
+      groupedOrders[order.fullName].push(order);
+    });
+    return groupedOrders;
   };
 
   return (
@@ -812,27 +1072,127 @@ const UserProfile = () => {
         {["Karila Pandan Wangi Premium", "Karila Ramos"].map((productName) => (
           <div key={productName}>
             <h3 className="text-xl font-semibold mb-2">{productName}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10" >
-              {filterOrdersByProductName(productName).map((order) => (
-                <CardItem7
-                  key={order.id}
-                  id={order.id}
-                  itemName={order.namaProduct}
-                  ptName={order.fullName}
-                  packaging={order.packaging}
-                  price={order.totalHarga}
-                  status={order.status}
-                  deliveryDate={order.deliveryDate}
-                  stock={order.stock}
-                />
-              ))}
-            </div>
+            {Object.entries(groupOrdersByFullName(filterOrdersByProductName(productName))).map(([fullName, orders]) => (
+              <div key={fullName} className="mb-6">
+                <h4 className="text-lg font-semibold mb-2">{fullName}</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {orders.map((order) => (
+                    <CardItem7
+                      key={order.id}
+                      order={order}
+                      handleEdit={handleEdit}
+                      handleDelete={handleDelete}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
+      {isEditModalOpen && (
+        <dialog open className="modal">
+          <form method="dialog" className="modal-box" onSubmit={handleSubmit}>
+            <h3 className="font-bold text-lg">Edit Order</h3>
+            <div className="py-4">
+              <label className="block mb-2">
+                Nama Lengkap
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+              <label className="block mb-2">
+                Kontak
+                <input
+                  type="text"
+                  name="contact"
+                  value={formData.contact}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+              <label className="block mb-2">
+                Alamat
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+              <label className="block mb-2">
+                Kemasan
+                <select
+                  name="packaging"
+                  value={formData.packaging}
+                  onChange={handleChange}
+                  className="select select-bordered w-full"
+                  required
+                >
+                  <option value="">Pilih Kemasan</option>
+                  <option value="3 Kg">3 Kg</option>
+                  <option value="5 Kg">5 Kg</option>
+                  <option value="10 Kg">10 Kg</option>
+                  <option value="20 Kg">20 Kg</option>
+                  <option value="25 Kg">25 Kg</option>
+                </select>
+              </label>
+              <label className="block mb-2">
+                Nama Produk
+                <select
+                  name="namaProduct"
+                  value={formData.namaProduct}
+                  onChange={handleChange}
+                  className="select select-bordered w-full"
+                  required
+                >
+                  <option value="">Pilih Produk</option>
+                  <option value="Karila Pandan Wangi Premium">Karila Pandan Wangi Premium</option>
+                  <option value="Karila Ramos">Karila Ramos</option>
+                </select>
+              </label>
+              <label className="block mb-2">
+                Stok
+                <input
+                  type="number"
+                  name="stock"
+                  value={formData.stock}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+              <label className="block mb-2">
+                Tanggal Pengiriman
+                <input
+                  type="date"
+                  name="deliveryDate"
+                  value={formData.deliveryDate}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+            </div>
+            <div className="modal-action">
+              <button type="submit" className="btn btn-primary">Simpan Perubahan</button>
+              <button type="button" className="btn btn-secondary" onClick={() => setIsEditModalOpen(false)}>Tutup</button>
+            </div>
+          </form>
+        </dialog>
+      )}
     </div>
   );
 };
 
 export default UserProfile;
+
 
